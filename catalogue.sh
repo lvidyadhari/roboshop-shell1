@@ -48,7 +48,7 @@ else
     echo -e "roboshop user already exist $Y SKIPPING $N"
 fi
 
-mkdir -p /app
+mkdir  /app
 
 VALIDATE $? "creating app directory"
 
