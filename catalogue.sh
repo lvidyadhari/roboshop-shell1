@@ -5,8 +5,7 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-
-MONGODB_HOST=mongodb.daws76.store
+MONGDB_HOST=mongodb.daws76s.store
 
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
@@ -26,14 +25,18 @@ VALIDATE(){
 if [ $ID -ne 0 ]
 then
     echo -e "$R ERROR:: Please run this script with root access $N"
-    exit 1 # you can give other thans 0
+    exit 1 # you can give other than 0
 else
     echo "You are root user"
 fi # fi means reverse of if, indicating condition end
 
-dnf install nodejs -y  &>> $LOGFILE
+dnf module disable nodejs -y &>> $LOGFILE
 
-VALIDATE $? "Installing NodeJS:18"
+VALIDATE $? "Disabling current NodeJS"
+
+dnf module enable nodejs:18 -y  &>> $LOGFILE
+
+VALIDATE $? "Enabling NodeJS:18"
 
 dnf install nodejs -y  &>> $LOGFILE
 
@@ -47,7 +50,6 @@ then
 else
     echo -e "roboshop user already exist $Y SKIPPING $N"
 fi
-
 mkdir -p /app
 
 VALIDATE $? "creating app directory"
@@ -91,6 +93,6 @@ dnf install mongodb-org-shell -y &>> $LOGFILE
 
 VALIDATE $? "Installing MongoDB client"
 
-mongo --host MONGODB_HOST </app/schema/catalogue.js &>> $LOGFILE
+mongo --host $MONGDB_HOST </app/schema/catalogue.js &>> $LOGFILE
 
 VALIDATE $? "Loading catalouge data into MongoDB"
