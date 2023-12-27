@@ -1,66 +1,68 @@
 #!/bin/bash
-
 ID=$(id -u)
+TIMESTAMP=$(date +%F-%H-%M-%S)
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 
-TIMESTAMP=$(date +%F-%H-%M-%S)
+
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
 
-echo "script stareted executing at $TIMESTAMP" &>> $LOGFILE
+echo "script started and exicuted at $TIMESTAMP" &>> $LOGFILE
 
-VALIDATE(){
-    if [ $1 -ne 0 ]
+validate(){
+     if [ $1 -ne 0 ]
     then
-        echo -e "$2 ... $R FAILED $N"
-        exit 1
+     echo  -e  "Error :: $2......  $R FAILED $N"
+     exit 1
     else
-        echo -e "$2 ... $G SUCCESS $N"
+     echo  -e  "$2..... $G success $N"
     fi
 }
 
+
 if [ $ID -ne 0 ]
 then
-    echo -e "$R ERROR:: Please run this script with root access $N"
-    exit 1 # you can give other than 0
+    echo -e " Error:: $R stop the script and run with root access $N"
+    exit 1
 else
-    echo "You are root user"
-fi # fi means reverse of if, indicating condition end
+    echo -e  " you are root user"
+fi
 
-dnf install nginx -y &>> $LOGFILE
- 
-VALIDATE $? "Installing nginx"
 
-systemctl enable nginx &>> $LOGFILE
+dnf install nginx -y         &>> $LOGFILE
 
-VALIDATE $? "Enable nginx" 
+validate $? "install nginx"
 
-systemctl start nginx &>> $LOGFILE
+systemctl enable nginx      &>> $LOGFILE
 
-VALIDATE $? "Starting Nginx"
+validate $? "enable nginx"
+
+systemctl start nginx     &>> $LOGFILE
+
+validate $? "start  nginx"
 
 rm -rf /usr/share/nginx/html/* &>> $LOGFILE
 
-VALIDATE $? "removed default website"
+validate $? "removing default nginx "
 
-curl -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip &>> $LOGFILE
+curl -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip  &>> $LOGFILE
 
-VALIDATE $? "Downloaded web application"
+validate $? "download web "
 
 cd /usr/share/nginx/html &>> $LOGFILE
 
-VALIDATE $? "moving nginx html directory"
+validate $? "change directory "
 
-unzip -o /tmp/web.zip &>> $LOGFILE
+unzip -o /tmp/web.zip  &>> $LOGFILE
 
-VALIDATE $? "unzipping web"
- 
-cp /home/centos/roboshop-shell1/roboshop.conf /etc/nginx/default.d/roboshop.conf &>> $LOGFILE 
+validate $? "unzip "
 
-VALIDATE $? "copied roboshop reverse proxy config"
+cp /home/centos/roboshop-shell1/roboshop.conf  /etc/nginx/default.d/roboshop.conf   &>> $LOGFILE
 
-systemctl restart nginx &>> $LOGFILE
+validate $? "copying roboshopconf file "
 
-VALIDATE $? "restarted nginx"
+systemctl restart nginx 
+
+validate $? "restarting nginx "
