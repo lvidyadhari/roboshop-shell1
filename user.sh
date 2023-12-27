@@ -6,7 +6,7 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 
-MONGDB_HOST=mongodb.daws76s.store
+MONGDB_HOST="mongodb.daws76s.store"
 
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
@@ -66,7 +66,7 @@ npm install  &>> $LOGFILE
 
 VALIDATE $? "Installing dependencies"
 
-cp /home/centos/roboshop-shell1/user.service /etc/systemd/system/user.service
+cp /home/centos/roboshop-shell1/user.service /etc/systemd/system/user.service &>> $LOGFILE
 
 VALIDATE $? "Copying user service file"
 
@@ -82,7 +82,7 @@ systemctl start user &>> $LOGFILE
 
 VALIDATE $? "Starting user"
 
-cp /home/centos/roboshop-shell1/mongo.repo /etc/yum.repos.d/mongo.repo
+cp /home/centos/roboshop-shell1/mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
 
 VALIDATE $? "copying mongodb repo"
 
@@ -90,6 +90,6 @@ dnf install mongodb-org-shell -y &>> $LOGFILE
 
 VALIDATE $? "Installing MongoDB client"
 
-mongo --host  MONGDB_HOST </app/schema/user.js &>> $LOGFILE
+mongo --host  $MONGDB_HOST </app/schema/user.js &>> $LOGFILE
 
 VALIDATE $? "Loading user data into MongoDB"
