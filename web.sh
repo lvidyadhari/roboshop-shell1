@@ -59,7 +59,7 @@ unzip -o /tmp/web.zip  &>> $LOGFILE
 
 validate $? "unzip "
 
-cp /home/centos/roboshop-shell1/roboshop.conf  /etc/nginx/default.d/roboshop.conf   &>> $LOGFILE
+cp /home/centos/roboshop-shell1  /etc/nginx/default.d/roboshop.conf   &>> $LOGFILE
 
 validate $? "copying roboshopconf file "
 
