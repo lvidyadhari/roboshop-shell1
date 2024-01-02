@@ -20,12 +20,12 @@ do
 
     #CREATE R53 record, make sure you delete existing record
     aws route53 change-resource-record-sets \
-    --hosted-zone-id $ZONE_ID \
-    --change-batch "
+   --hosted-zone-id $ZONE_ID \
+    --change-batch '
     {
         "Comment": "Creating a record set for cognito endpoint"
         ,"Changes": [{
-        "Action"              : "CREATE"
+        "Action"              : "UPSERT"
         ,"ResourceRecordSet"  : {
             "Name"              : "'$i'.'$DOMAIN_NAME'"
             ,"Type"             : "A"
@@ -36,5 +36,6 @@ do
         }
         }]
     }
-    "
+
+    
 done
